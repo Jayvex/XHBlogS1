@@ -48,8 +48,8 @@ export const siteConfig = {
   // 👇 【新增】：全局背景弹幕配置
   danmakuList: ["你怎么睡得着的", "在干嘛呢？", "有笨蛋嘛？", "前方高能反应！", "BUG 修复进度 99%", "今天背单词了吗？", "写算法中", "睡大觉中", "到底在干嘛？"],
   gitalkConfig: {
-    clientID: "",
-    clientSecret: "",
+    clientID: "Ov23li8ax0gPuU7fskyM",
+    clientSecret: "9d422211e65919d0e098733789fec7ed4c38305b",
     repo: "XHBlogS1",
     owner: "Jayvex",
     admin: ["Jayvex"],
