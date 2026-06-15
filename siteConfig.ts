@@ -50,7 +50,7 @@ export const siteConfig = {
   gitalkConfig: {
     clientID: "Ov23li8ax0gPuU7fskyM",
     clientSecret: "9d422211e65919d0e098733789fec7ed4c38305b",
-    repo: "my_blog",
+    repo: "XHBlogS1",
     owner: "Jayvex",
     admin: ["Jayvex"],
   },
