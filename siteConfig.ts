@@ -3,7 +3,7 @@
 export const siteConfig = {
   // 1. 网站标题与博主信息
   title: "XiaoQuanJie の博客",
-  faviconUrl: "https://pic.rmb.bdstatic.com/bjh/3f1185357e50/240627/8ee97a8307a25a087c8b7fbb61bdcede.jpeg",
+  faviconUrl: "/avatar.jpg",
   authorName: "XiaoQuanJie",
   bio: "(╯°□°）╯︵ ┻━┻",
 
@@ -25,10 +25,10 @@ export const siteConfig = {
   bgImages: ["/bg1.jpg", "/bg2.jpg", "/bg3.jpg"],
 
   // 4. 文章默认封面图 (当 Markdown 没写 cover 时显示)
-  defaultPostCover: "https://bu.dusays.com/2026/03/24/69c1e38b346cb.jpg",
+  defaultPostCover: "/fm1.jpg",
 
   // 5. 首页照片墙预览图
-  photoWallImage: "https://bu.dusays.com/2026/03/24/69c1e38b4c370.jpg",
+  photoWallImage: "/bg2.jpg",
   localMusicList: [
     {
       title: "天后 (Live)",
