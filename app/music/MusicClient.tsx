@@ -12,7 +12,7 @@ export default function MusicClient() {
   const {
     playlist, currentSong, isPlaying, progress, currentTime, duration, currentLyric,
     isLoading, togglePlay, nextSong, prevSong, handleSeek,
-    playSong, selectSong,
+    playSong,
     playMode, togglePlayMode,
     volume, setVolume, isMuted, toggleMute
   } = useMusic();
