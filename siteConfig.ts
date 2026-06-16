@@ -31,11 +31,11 @@ export const siteConfig = {
   photoWallImage: "https://bu.dusays.com/2026/03/24/69c1e38b4c370.jpg",
   localMusicList: [
     {
-      title: "天后-（live）",
+      title: "天后 (Live)",
       artist: "薛之谦",
-      src: "/music/薛之谦 - 天后 (Live).mp3",
-      cover: "/music/天后-（live）.jpg",
-      lrcFile: "/music/薛之谦 - 天后 (Live).lrc",  // 歌词文件路径
+      src: "/music/tianhou.mp3",
+      cover: "/music/cover.jpg",
+      lrcFile: "/music/tianhou.lrc",  // 歌词文件路径
     }
   ],
   social: {
