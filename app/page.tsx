@@ -49,6 +49,7 @@ export default function Home() {
           ...data,
           title: data.title || '',
           description: data.description || '',
+          cover: data.cover || siteConfig.defaultPostCover,
           content: content || '',
           date: rawDate,
           formattedDate: formatUpdateTime(rawDate)
