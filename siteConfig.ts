@@ -3,7 +3,7 @@
 export const siteConfig = {
   // 1. 网站标题与博主信息
   title: "XiaoQuanJie の博客",
-  faviconUrl: "/avatar.jpg",
+  faviconUrl: "https://github.com/Jayvex/picx-images-hosting/raw/master/blog/avatar.9gx8d6wxcm.webp",
   authorName: "XiaoQuanJie",
   bio: "(╯°□°）╯︵ ┻━┻",
 
@@ -15,26 +15,26 @@ export const siteConfig = {
   navAfter: "博客",
 
   // 2. 头像设置 (支持网络链接，或将图片放入 public 文件夹后使用 "/me.jpg")
-  avatarUrl: "/avatar.jpg",
+  avatarUrl: "https://github.com/Jayvex/picx-images-hosting/raw/master/blog/avatar.9gx8d6wxcm.webp",
 
   // 3. 网站背景设置 (二选一)
   // 如果想用纯图片背景，请在下面 bgImage 写路径，并将 useGradient 设为 false
   useGradient: false,
   themeColors: ["#a18cd1", "#fbc2eb", "#a1c4fd", "#c2e9fb"], // 呼吸流动的颜色组合
 // 修改这里：变成图片数组
-  bgImages: ["/bg1.jpg", "/bg2.jpg", "/bg3.jpg"],
+  bgImages: ["https://github.com/Jayvex/picx-images-hosting/raw/master/blog/bg1.54yf5ndluf.webp", "https://github.com/Jayvex/picx-images-hosting/raw/master/blog/bg2.wj7vtnd1a.webp", "https://github.com/Jayvex/picx-images-hosting/raw/master/blog/bg3.102ttjgfr5.webp"],
 
   // 4. 文章默认封面图 (当 Markdown 没写 cover 时显示)
-  defaultPostCover: "/fm1.jpg",
+  defaultPostCover: "https://github.com/Jayvex/picx-images-hosting/raw/master/blog/fm1.8l0qxqn8w2.webp",
 
   // 5. 首页照片墙预览图
-  photoWallImage: "/bg2.jpg",
+  photoWallImage: "https://github.com/Jayvex/picx-images-hosting/raw/master/blog/bg3.102ttjgfr5.webp",
   localMusicList: [
     {
       title: "天后 (Live)",
       artist: "薛之谦",
       src: "/music/tianhou.mp3",
-      cover: "/music/cover.jpg",
+      cover: "https://github.com/Jayvex/picx-images-hosting/raw/master/blog/天后-（live）.6bhqe97km2.webp",
       lrcFile: "/music/tianhou.lrc",  // 歌词文件路径
     }
   ],
@@ -67,6 +67,6 @@ export const siteConfig = {
     name: "萌ICP备 20260240号",
     link: "https://icp.gov.moe/?keyword=20260240",
   },
-  friendLinkApplyFormat: "名称：XiaoQuanJie の博客\n简介：ヾ(≧▽≦*)o\n链接：https://www.jayvex.xyz\n头像：https://pic.rmb.bdstatic.com/bjh/3f1185357e50/240627/8ee97a8307a25a087c8b7fbb61bdcede.jpeg",
+  friendLinkApplyFormat: "名称：XiaoQuanJie の博客\n简介：ヾ(≧▽≦*)o\n链接：https://www.jayvex.xyz\n头像：https://github.com/Jayvex/picx-images-hosting/raw/master/blog/avatar.9gx8d6wxcm.webp",
   enableLevelSystem: false,
 };

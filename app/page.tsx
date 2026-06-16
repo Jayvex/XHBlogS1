@@ -73,7 +73,7 @@ export default function Home() {
         const fullPath = path.join(chattersDirectory, fileName);
         const { data, content } = matter(fs.readFileSync(fullPath, 'utf8'));
         const rawDate = data.date || '1970-01-01';
-        const cover = data.cover || 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop';
+        const cover = data.cover || 'https://github.com/Jayvex/picx-images-hosting/raw/master/blog/bg2.wj7vtnd1a.webp';
         return { slug: fileName.replace(/\.md$/, ''), title: data.title || '碎片记录', description: data.description || content.substring(0, 60), cover: cover, date: rawDate, formattedDate: formatUpdateTime(rawDate) };
       }).sort((a, b) => {
         const dateA = new Date(a.date).getTime();

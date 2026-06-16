@@ -174,6 +174,38 @@ date: "2026-06-16"
 说说内容...
 ```
 
+### 添加照片墙
+
+编辑 `data/albums.ts` 文件：
+
+```typescript
+export const albums: Album[] = [
+  {
+    id: "album-1",
+    title: "相册标题",
+    description: "相册描述",
+    cover: "封面图链接",
+    date: "2026-06",
+    photos: [
+      { url: "图片链接1", caption: "图片描述1" },
+      { url: "图片链接2", caption: "图片描述2" },
+      // 添加更多照片...
+    ]
+  },
+  // 添加更多相册...
+];
+```
+
+**字段说明：**
+- `id`: 相册唯一标识
+- `title`: 相册标题
+- `description`: 相册描述
+- `cover`: 相册封面图链接
+- `date`: 日期（显示在相册标题旁）
+- `photos`: 照片数组
+  - `url`: 图片链接（支持网络链接或本地图片）
+  - `caption`: 图片描述（可选，鼠标悬停时显示）
+
 ### 添加项目
 
 编辑 `data/projects.ts` 文件：

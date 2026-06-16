@@ -37,7 +37,7 @@ hello("World")
 
 ## 图片示例
 
-![测试图片](/bg1.jpg)
+![测试图片](https://github.com/Jayvex/picx-images-hosting/raw/master/blog/bg1.54yf5ndluf.webp)
 
 ## 链接示例
 
