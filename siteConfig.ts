@@ -2,7 +2,7 @@
 
 export const siteConfig = {
   // 1. 网站标题与博主信息
-  title: "XiaoQuanJie の博客",
+  title: "XiaoQuanJie的小屋",
   faviconUrl: "https://github.com/Jayvex/picx-images-hosting/raw/master/blog/avatar.9gx8d6wxcm.webp",
   authorName: "XiaoQuanJie",
   bio: "(╯°□°）╯︵ ┻━┻",
@@ -10,9 +10,9 @@ export const siteConfig = {
   navTitle: "XiaoQuanJie",
 
   // 👇 【新增】导航栏中间的那个后缀/分隔符（默认是 の）
-  navSuffix: "の",
+  navSuffix: "的",
 
-  navAfter: "博客",
+  navAfter: "小屋",
 
   // 2. 头像设置 (支持网络链接，或将图片放入 public 文件夹后使用 "/me.jpg")
   avatarUrl: "https://github.com/Jayvex/picx-images-hosting/raw/master/blog/avatar.9gx8d6wxcm.webp",
@@ -67,6 +67,6 @@ export const siteConfig = {
     name: "萌ICP备 20260336号",
     link: "https://icp.gov.moe/?keyword=20260336",
   },
-  friendLinkApplyFormat: "名称：XiaoQuanJie の博客\n简介：ヾ(≧▽≦*)o\n链接：https://www.jayvex.xyz\n头像：https://github.com/Jayvex/picx-images-hosting/raw/master/blog/avatar.9gx8d6wxcm.webp",
+  friendLinkApplyFormat: "名称：XiaoQuanJie的小屋\n简介：ヾ(≧▽≦*)o\n链接：https://www.jayvex.xyz\n头像：https://github.com/Jayvex/picx-images-hosting/raw/master/blog/avatar.9gx8d6wxcm.webp",
   enableLevelSystem: false,
 };
