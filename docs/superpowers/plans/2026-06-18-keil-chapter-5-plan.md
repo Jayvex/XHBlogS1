@@ -1,0 +1,325 @@
+# 第5章：模块化编程 博客文章实施计划
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** 创建第5章模块化编程的博客文章，记录模块化编程和LCD1602调试工具的学习过程
+
+**Architecture:** 单篇博客文章，包含2个项目的详细介绍，遵循设计规范中的文章结构
+
+**Tech Stack:** Markdown, 51单片机, C语言
+
+---
+
+## 文件结构
+
+- Create: `posts/keil-chapter-5.md`
+
+---
+
+### Task 1: 创建文章文件并添加 Frontmatter
+
+**Files:**
+- Create: `posts/keil-chapter-5.md`
+
+- [ ] **Step 1: 创建文章文件并添加 Frontmatter**
+
+```markdown
+---
+title: "第5章：模块化编程 - 从代码组织到调试工具的学习记录"
+date: "2026-06-18 13:00:00"
+tags: ["单片机", "51单片机", "模块化", "LCD1602", "嵌入式", "C语言"]
+mood: "😊"
+cover: ""
+description: "记录51单片机模块化编程的学习过程，包括代码模块化组织和LCD1602调试工具的使用"
+---
+```
+
+- [ ] **Step 2: 提交**
+
+```bash
+git add posts/keil-chapter-5.md
+git commit -m "feat: 创建第5章模块化编程博客文章并添加frontmatter"
+```
+
+---
+
+### Task 2: 添加引言部分
+
+**Files:**
+- Modify: `posts/keil-chapter-5.md`
+
+- [ ] **Step 1: 添加引言内容**
+
+```markdown
+## 引言
+
+随着项目复杂度增加，代码组织变得越来越重要。本章将学习：
+- 模块化编程的概念和优势
+- 如何将代码拆分成独立模块
+- LCD1602液晶显示模块的使用
+
+本章将从简单的模块化编程开始，学习如何使用LCD1602进行调试显示。
+
+## 项目列表
+
+1. **5-1 模块化编程**：学习代码模块化组织方法
+2. **5-2 LCD1602调试工具**：掌握LCD1602的使用和调试技巧
+```
+
+- [ ] **Step 2: 提交**
+
+```bash
+git add posts/keil-chapter-5.md
+git commit -m "docs: 添加第5章引言和项目列表"
+```
+
+---
+
+### Task 3: 添加项目1（5-1模块化编程）
+
+**Files:**
+- Modify: `posts/keil-chapter-5.md`
+
+- [ ] **Step 1: 添加项目1内容**
+
+```markdown
+## 项目1：5-1 模块化编程
+
+### 项目目标
+将代码拆分成独立模块，学习模块化编程方法。
+
+### 代码解析
+
+**main.c（主程序）：**
+```c
+//CPU: AT89C52
+//Freq: 12MHz
+
+#include <reg52.h>  // 包含51单片机寄存器定义头文件
+#include "delay.h"  // 包含延时函数模块头文件
+#include "nixie.h"  // 包含数码管显示模块头文件
+
+void main()
+{
+    while (1)
+    {
+        // 调用模块化函数，依次显示数字1-8
+        nixie(1, 1);  // 在第1个数码管显示数字1
+        nixie(2, 2);  // 在第2个数码管显示数字2
+        nixie(3, 3);  // 在第3个数码管显示数字3
+        nixie(4, 4);  // 在第4个数码管显示数字4
+        nixie(5, 5);  // 在第5个数码管显示数字5
+        nixie(6, 6);  // 在第6个数码管显示数字6
+        nixie(7, 7);  // 在第7个数码管显示数字7
+        nixie(8, 8);  // 在第8个数码管显示数字8
+    }
+}
+```
+
+**delay.h（延时函数模块头文件）：**
+```c
+#ifndef __DELAY_H__  // 防止头文件重复包含
+#define __DELAY_H__
+
+void delay(unsigned int xms);  // 延时函数声明
+
+#endif
+```
+
+**nixie.h（数码管显示模块头文件）：**
+```c
+#ifndef __NIXIE_H__  // 防止头文件重复包含
+#define __NIXIE_H__
+
+void nixie(unsigned char location, unsigned char num);  // 数码管显示函数声明
+
+#endif
+```
+
+**代码解释：**
+- 使用`#include`包含模块头文件
+- 头文件使用`#ifndef`防止重复包含
+- 每个模块有独立的`.h`和`.c`文件
+- 主程序只调用模块提供的函数，不关心实现细节
+
+### 关键知识点
+1. **模块化编程**：将代码拆分成独立模块，每个模块负责特定功能
+2. **头文件保护**：使用`#ifndef`防止头文件重复包含
+3. **接口设计**：通过头文件提供模块的公共接口
+4. **代码复用**：模块可以在不同项目中复用
+
+### 遇到的问题和解决方法
+**问题**：不理解为什么要使用头文件保护。
+
+**解决**：头文件保护（`#ifndef`、`#define`、`#endif`）防止同一个头文件被多次包含，避免重复定义错误。这是C语言模块化编程的标准做法。
+```
+
+- [ ] **Step 2: 提交**
+
+```bash
+git add posts/keil-chapter-5.md
+git commit -m "docs: 添加第5章项目1（5-1模块化编程）"
+```
+
+---
+
+### Task 4: 添加项目2（5-2 LCD1602调试工具）
+
+**Files:**
+- Modify: `posts/keil-chapter-5.md`
+
+- [ ] **Step 1: 添加项目2内容**
+
+```markdown
+## 项目2：5-2 LCD1602调试工具
+
+### 项目目标
+学习LCD1602液晶显示模块的使用，掌握调试显示技巧。
+
+### 代码解析
+
+由于LCD1602的驱动代码较长，这里只展示主程序和关键函数：
+
+**main.c（主程序）：**
+```c
+//CPU: AT89C52
+//Freq: 12MHz
+
+#include <reg52.h>      // 包含51单片机寄存器定义头文件
+#include "LCD1602.h"    // 包含LCD1602驱动模块头文件
+#include "delay.h"      // 包含延时函数模块头文件
+
+void main()
+{
+    LCD_Init();  // 初始化LCD1602
+    
+    // 在LCD上显示调试信息
+    LCD_ShowString(1, 1, "Debug Mode");  // 第1行第1列显示字符串
+    LCD_ShowNum(2, 1, 12345, 5);         // 第2行第1列显示数字
+    
+    while (1)
+    {
+        // 主循环，保持显示
+    }
+}
+```
+
+**LCD1602.h（LCD1602驱动模块头文件）：**
+```c
+#ifndef __LCD1602_H__  // 防止头文件重复包含
+#define __LCD1602_H__
+
+// LCD1602初始化函数
+void LCD_Init();
+
+// LCD1602显示字符函数
+// row: 行号（1或2）
+// col: 列号（1-16）
+// char: 要显示的字符
+void LCD_ShowChar(unsigned char row, unsigned char col, char c);
+
+// LCD1602显示字符串函数
+// row: 行号（1或2）
+// col: 列号（1-16）
+// str: 要显示的字符串
+void LCD_ShowString(unsigned char row, unsigned char col, char *str);
+
+// LCD1602显示数字函数
+// row: 行号（1或2）
+// col: 列号（1-16）
+// num: 要显示的数字
+// len: 数字长度
+void LCD_ShowNum(unsigned char row, unsigned char col, unsigned int num, unsigned char len);
+
+#endif
+```
+
+**代码解释：**
+- `LCD_Init()`：初始化LCD1602，设置显示模式
+- `LCD_ShowChar()`：在指定位置显示单个字符
+- `LCD_ShowString()`：在指定位置显示字符串
+- `LCD_ShowNum()`：在指定位置显示数字
+
+### 关键知识点
+1. **LCD1602工作原理**：了解LCD1602的引脚和通信协议
+2. **模块化驱动**：将LCD1602驱动封装成独立模块
+3. **调试显示**：使用LCD显示调试信息，方便程序调试
+
+### 遇到的问题和解决方法
+**问题**：LCD1602显示乱码或不显示。
+
+**解决**：检查以下几点：
+1. 确认LCD1602的引脚连接正确
+2. 检查初始化函数是否正确调用
+3. 确认延时函数是否准确
+4. 检查显示位置是否超出范围（16列2行）
+```
+
+- [ ] **Step 2: 提交**
+
+```bash
+git add posts/keil-chapter-5.md
+git commit -m "docs: 添加第5章项目2（5-2 LCD1602调试工具）"
+```
+
+---
+
+### Task 5: 添加总结部分
+
+**Files:**
+- Modify: `posts/keil-chapter-5.md`
+
+- [ ] **Step 1: 添加总结内容**
+
+```markdown
+## 总结
+
+通过第5章的学习，我掌握了模块化编程的基础知识：
+
+1. **模块化思想**：学会了将代码拆分成独立模块，每个模块负责特定功能
+2. **头文件使用**：掌握了头文件的编写和保护方法
+3. **接口设计**：学会了通过头文件提供模块的公共接口
+4. **LCD1602使用**：掌握了LCD1602液晶显示模块的基本使用方法
+5. **调试技巧**：学会了使用LCD显示调试信息
+
+这些知识为后续学习矩阵键盘、定时器等内容打下了基础，也提高了代码的可维护性和复用性。
+
+## 下一步学习
+
+接下来将学习第6章：矩阵键盘，了解如何通过矩阵键盘输入数据。
+```
+
+- [ ] **Step 2: 提交**
+
+```bash
+git add posts/keil-chapter-5.md
+git commit -m "docs: 添加第5章总结和下一步学习"
+```
+
+---
+
+### Task 6: 最终检查和提交
+
+**Files:**
+- Modify: `posts/keil-chapter-5.md`
+
+- [ ] **Step 1: 检查文章完整性**
+
+确认文章包含：
+- Frontmatter（标题、日期、标签、心情、封面、描述）
+- 引言部分
+- 项目列表
+- 2个项目的详细介绍（项目目标、代码解析、关键知识点、遇到的问题和解决方法）
+- 总结部分
+- 下一步学习
+
+- [ ] **Step 2: 检查代码注释**
+
+确认所有代码都有中文注释，即使是原代码中没有注释的部分也补充了简单注释。
+
+- [ ] **Step 3: 最终提交**
+
+```bash
+git add posts/keil-chapter-5.md
+git commit -m "feat: 完成第5章模块化编程博客文章"
+```

@@ -1,0 +1,223 @@
+# 第10章：DS1302时钟 博客文章实施计划
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** 创建第10章DS1302时钟的博客文章，记录DS1302实时时钟芯片的学习过程
+
+**Architecture:** 单篇博客文章，包含1个项目的详细介绍，遵循设计规范中的文章结构
+
+**Tech Stack:** Markdown, 51单片机, C语言
+
+---
+
+## 文件结构
+
+- Create: `posts/keil-chapter-10.md`
+
+---
+
+### Task 1: 创建文章文件并添加 Frontmatter
+
+**Files:**
+- Create: `posts/keil-chapter-10.md`
+
+- [ ] **Step 1: 创建文章文件并添加 Frontmatter**
+
+```markdown
+---
+title: "第10章：DS1302时钟 - 实时时钟芯片的学习记录"
+date: "2026-06-18 18:00:00"
+tags: ["单片机", "51单片机", "DS1302", "实时时钟", "嵌入式", "C语言"]
+mood: "😊"
+cover: ""
+description: "记录51单片机DS1302实时时钟芯片的学习过程，包括DS1302的初始化和读写操作"
+---
+```
+
+- [ ] **Step 2: 提交**
+
+```bash
+git add posts/keil-chapter-10.md
+git commit -m "feat: 创建第10章DS1302时钟博客文章并添加frontmatter"
+```
+
+---
+
+### Task 2: 添加引言部分
+
+**Files:**
+- Modify: `posts/keil-chapter-10.md`
+
+- [ ] **Step 1: 添加引言内容**
+
+```markdown
+## 引言
+
+DS1302是一款实时时钟芯片，可以提供精确的时钟功能。本章将学习：
+- DS1302的工作原理
+- DS1302的初始化和读写操作
+- DS1302的实际应用
+
+本章将学习如何使用DS1302实现一个简单的实时时钟。
+
+## 项目列表
+
+1. **10-1 DS1302时钟**：学习DS1302的初始化和读写操作
+```
+
+- [ ] **Step 2: 提交**
+
+```bash
+git add posts/keil-chapter-10.md
+git commit -m "docs: 添加第10章引言和项目列表"
+```
+
+---
+
+### Task 3: 添加项目1（10-1DS1302时钟）
+
+**Files:**
+- Modify: `posts/keil-chapter-10.md`
+
+- [ ] **Step 1: 添加项目1内容**
+
+```markdown
+## 项目1：10-1 DS1302时钟
+
+### 项目目标
+使用DS1302实时时钟芯片，实现时钟显示功能。
+
+### 代码解析
+
+**main.c（主程序）：**
+```c
+/**
+ * CPU: 89C52
+ * Freq: 12MHz
+*/
+
+#include <reg52.h>      // 包含51单片机寄存器定义头文件
+#include "LCD1602.h"    // 包含LCD1602驱动模块头文件
+#include "DS1302.h"     // 包含DS1302驱动模块头文件
+
+unsigned char Second;   // 存储秒数据
+
+void main()
+{
+    LCD_Init();         // 初始化LCD1602
+    DS1302_Init();      // 初始化DS1302
+    LCD_ShowString(1, 1, "RTC");  // 第1行显示"RTC"
+    
+    // 关闭写保护，设置初始时间为03秒
+    DS1302_WriteByte(0x8e, 0x00);  // 关闭写保护
+    DS1302_WriteByte(0x80, 0x03);  // 设置秒为03
+    
+    while (1)
+    {
+        // 读取秒数据
+        Second = DS1302_ReadByte(0x81);
+        // 将BCD码转换为十进制并显示
+        LCD_ShowNum(2, 1, Second / 16 * 10 + Second % 16, 3);
+    }
+}
+```
+
+**代码解释：**
+- `DS1302_Init()`：初始化DS1302，设置时钟运行
+- `DS1302_WriteByte()`：向DS1302写入一个字节的数据
+- `DS1302_ReadByte()`：从DS1302读取一个字节的数据
+- `0x8e`：控制寄存器地址，用于设置写保护
+- `0x80`：秒寄存器地址，用于设置秒数据
+- BCD码转换：`Second / 16 * 10 + Second % 16`将BCD码转换为十进制
+
+### 关键知识点
+1. **DS1302工作原理**：了解DS1302的引脚和通信协议
+2. **BCD码**：DS1302使用BCD码存储时间数据
+3. **寄存器操作**：通过寄存器地址读写DS1302的数据
+4. **写保护**：DS1302有写保护功能，需要先关闭才能写入
+
+### 遇到的问题和解决方法
+**问题**：DS1302读取的时间数据不正确。
+
+**解决**：检查以下几点：
+1. 确认DS1302连接正确
+2. 检查BCD码转换是否正确
+3. 确认写保护已关闭
+4. 检查时钟是否已启动
+```
+
+- [ ] **Step 2: 提交**
+
+```bash
+git add posts/keil-chapter-10.md
+git commit -m "docs: 添加第10章项目1（10-1DS1302时钟）"
+```
+
+---
+
+### Task 4: 添加总结部分
+
+**Files:**
+- Modify: `posts/keil-chapter-10.md`
+
+- [ ] **Step 1: 添加总结内容**
+
+```markdown
+## 总结
+
+通过第10章的学习，我掌握了DS1302实时时钟芯片的基础知识：
+
+1. **DS1302原理**：了解了DS1302的工作原理和引脚功能
+2. **寄存器操作**：学会了通过寄存器地址读写DS1302的数据
+3. **BCD码转换**：掌握了BCD码与十进制的转换方法
+4. **写保护**：学会了关闭和开启DS1302的写保护功能
+
+通过本章的学习，我完成了51单片机基础实验的全部内容。从LED控制到DS1302时钟，我逐步掌握了单片机开发的基础知识和技能。
+
+## 学习总结
+
+通过这9章的学习，我掌握了：
+1. **GPIO控制**：LED和按键的基本控制方法
+2. **显示技术**：数码管、LCD1602、LED点阵屏的使用
+3. **输入设备**：独立按键、矩阵键盘的使用
+4. **定时器**：定时器中断的使用方法
+5. **通信技术**：串口通信的基本方法
+6. **时钟芯片**：DS1302实时时钟芯片的使用
+
+这些知识为后续深入学习单片机开发打下了坚实的基础。
+```
+
+- [ ] **Step 2: 提交**
+
+```bash
+git add posts/keil-chapter-10.md
+git commit -m "docs: 添加第10章总结和学习总结"
+```
+
+---
+
+### Task 5: 最终检查和提交
+
+**Files:**
+- Modify: `posts/keil-chapter-10.md`
+
+- [ ] **Step 1: 检查文章完整性**
+
+确认文章包含：
+- Frontmatter（标题、日期、标签、心情、封面、描述）
+- 引言部分
+- 项目列表
+- 1个项目的详细介绍（项目目标、代码解析、关键知识点、遇到的问题和解决方法）
+- 总结部分
+- 学习总结
+
+- [ ] **Step 2: 检查代码注释**
+
+确认所有代码都有中文注释，即使是原代码中没有注释的部分也补充了简单注释。
+
+- [ ] **Step 3: 最终提交**
+
+```bash
+git add posts/keil-chapter-10.md
+git commit -m "feat: 完成第10章DS1302时钟博客文章"
+```
