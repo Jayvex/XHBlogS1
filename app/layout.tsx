@@ -11,6 +11,7 @@ import BackgroundSlider from "../components/BackgroundSlider";
 import GlobalToolbox from "../components/GlobalToolbox";
 import SplashScreen from "../components/SplashScreen";
 import DanmakuBackground from '../components/DanmakuBackground';
+import SessionProvider from '../components/SessionProvider';
 
 import MobileBackButton from '../components/MobileBackButton';
 
@@ -102,7 +103,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               </div>
 
               <div className="relative z-10 flex-1 flex flex-col">
-                {children}
+                <SessionProvider>
+                  {children}
+                </SessionProvider>
               </div>
 
               <div className="hidden md:block">

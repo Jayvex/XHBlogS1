@@ -4,9 +4,12 @@ import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, PanInfo } from 'framer-motion';
+import { useSession, signOut } from 'next-auth/react';
+import { LogIn, LogOut, User } from 'lucide-react';
 import { siteConfig } from '../siteConfig';
 
 export default function Navbar() {
+  const { data: session } = useSession();
   const [showNav, setShowNav] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -94,7 +97,7 @@ export default function Navbar() {
             <span className="text-indigo-500 mx-1">{siteConfig.navSuffix || 'の'}</span>
             {siteConfig.navAfter || '宝藏之地'}
           </Link>
-          <nav className="flex gap-8 text-sm font-bold">
+          <nav className="flex items-center gap-8 text-sm font-bold">
             {/* PC端依然使用全量的 navLinks */}
             {navLinks.map((link) => {
               const isActive = pathname === link.href || pathname === `${link.href}/`;
@@ -105,6 +108,33 @@ export default function Navbar() {
                 </Link>
               );
             })}
+
+            {/* 登录/登出按钮 */}
+            {session?.user ? (
+              <div className="flex items-center gap-3 ml-4 pl-4 border-l border-slate-200 dark:border-slate-700">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-indigo-500/10 rounded-full">
+                  <User size={14} className="text-indigo-500" />
+                  <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">
+                    {session.user.name}
+                  </span>
+                </div>
+                <button
+                  onClick={() => signOut({ callbackUrl: "/" })}
+                  className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                  title="登出"
+                >
+                  <LogOut size={16} />
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="flex items-center gap-1.5 px-3 py-1.5 ml-4 pl-4 border-l border-slate-200 dark:border-slate-700 text-slate-500 hover:text-indigo-500 transition-colors"
+              >
+                <LogIn size={14} />
+                <span className="text-xs font-bold">登录</span>
+              </Link>
+            )}
           </nav>
         </div>
       </header>

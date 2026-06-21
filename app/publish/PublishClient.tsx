@@ -2,8 +2,9 @@
 
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, MessageSquare, BookOpen, Send, Save, Eye, ArrowLeft } from 'lucide-react';
+import { FileText, MessageSquare, BookOpen, Send, Save, Eye, ArrowLeft, LogOut, User } from 'lucide-react';
 import Link from 'next/link';
+import { useSession, signOut } from 'next-auth/react';
 import MarkdownEditor from '../../components/MarkdownEditor';
 import ImageLinkInput from '../../components/ImageLinkInput';
 
@@ -40,6 +41,7 @@ interface ChatterFormData {
 }
 
 export default function PublishClient() {
+  const { data: session } = useSession();
   const [contentType, setContentType] = useState<ContentType>('post');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
@@ -194,13 +196,38 @@ export default function PublishClient() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-indigo-500 mb-4 transition-colors"
-        >
-          <ArrowLeft size={16} />
-          返回首页
-        </Link>
+        <div className="flex items-center justify-between mb-4">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-indigo-500 transition-colors"
+          >
+            <ArrowLeft size={16} />
+            返回首页
+          </Link>
+
+          {/* 用户信息和登出 */}
+          {session?.user && (
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-white/50 dark:bg-slate-800/50 rounded-full border border-white/40 dark:border-white/10">
+                <User size={14} className="text-indigo-500" />
+                <span className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                  {session.user.name}
+                </span>
+                <span className="px-2 py-0.5 bg-indigo-500/10 text-indigo-500 text-xs rounded-full">
+                  管理员
+                </span>
+              </div>
+              <button
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-slate-500 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+              >
+                <LogOut size={14} />
+                登出
+              </button>
+            </div>
+          )}
+        </div>
+
         <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
           发布内容
         </h1>
