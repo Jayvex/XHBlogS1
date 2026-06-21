@@ -12,6 +12,7 @@ import remarkRehype from 'remark-rehype';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeStringify from 'rehype-stringify';
 import rehypeKatex from 'rehype-katex';
+import rehypeCodeButtons from '../../../lib/rehype-code-buttons';
 
 // 🌟 引入神仙代码高亮主题（Atom One Dark）
 import 'highlight.js/styles/atom-one-dark.css';
@@ -87,6 +88,12 @@ async function getChatterData(slug: string) {
       subset: ['cpp', 'c', 'python', 'java', 'javascript', 'typescript', 'go', 'rust', 'bash', 'json', 'html', 'css', 'sql', 'xml']
     })
     .use(rehypeKatex)
+    // 添加代码块复制按钮
+    .use(rehypeCodeButtons, {
+      copyText: '复制',
+      copiedText: '✓ 已复制',
+      showLanguage: true,
+    })
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(content);
 
@@ -258,14 +265,30 @@ export default async function ChatterDetail({ params }: { params: Promise<{ slug
                   .prose pre code .hljs-attr, .prose pre code .hljs-variable, .prose pre code .hljs-template-variable, .prose pre code .hljs-selector-class, .prose pre code .hljs-selector-attr, .prose pre code .hljs-selector-pseudo, .prose pre code .hljs-number { color: #d19a66 !important; }
                   .prose pre code .hljs-symbol, .prose pre code .hljs-bullet, .prose pre code .hljs-link, .prose pre code .hljs-meta, .prose pre code .hljs-selector-id, .prose pre code .hljs-title, .prose pre code .hljs-title.function_ { color: #61aeee !important; } 
 
+                  /* 代码块复制按钮样式 */
+                  .code-block-wrapper {
+                    position: relative;
+                  }
+                  .code-block-wrapper:hover .code-copy-button {
+                    opacity: 1 !important;
+                  }
+                  .code-copy-button:hover {
+                    background: rgba(30, 41, 59, 0.95) !important;
+                    color: #e2e8f0 !important;
+                    border-color: rgba(148, 163, 184, 0.4) !important;
+                  }
+                  .code-copy-button:active {
+                    transform: scale(0.95);
+                  }
+
                   @media (min-width: 768px) {
                     .prose h1 { font-size: 3rem !important; font-weight: 950 !important; margin-bottom: 2rem !important; margin-top: 3rem !important; line-height: 1.1 !important; }
                     .prose h2 { font-size: 2.2rem !important; margin-bottom: 1.5rem !important; margin-top: 2rem !important; }
                     .prose h3 { font-size: 1.5rem !important; margin-bottom: 1rem !important; }
                     .prose p { font-size: 1.15rem !important; line-height: 1.85 !important; }
-                    
+
                     .prose ul, .prose ol { padding-left: 2rem !important; font-size: 1.1rem !important; }
-                    
+
                     .prose pre { padding: 1.25rem !important; margin-top: 1.5rem !important; margin-bottom: 1.5rem !important; }
                     .prose pre code { font-size: 0.9em !important; }
                     .prose p code, .prose li code { padding: 0.2rem 0.4rem !important; font-size: 0.9em !important; border-radius: 0.375rem !important;}
