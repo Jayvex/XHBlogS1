@@ -39,7 +39,9 @@ export async function generateStaticParams() {
 }
 
 async function getChatterData(slug: string) {
-  const fullPath = path.join(process.cwd(), 'chatters', `${slug}.md`);
+  // 解码 URL 编码的中文文件名
+  const decodedSlug = decodeURIComponent(slug);
+  const fullPath = path.join(process.cwd(), 'chatters', `${decodedSlug}.md`);
   const fileContents = fs.readFileSync(fullPath, 'utf8');
 
   let { data, content } = matter(fileContents);
@@ -116,12 +118,19 @@ function getRecentChatters(currentSlug: string) {
   try { fileNames = fs.readdirSync(chattersDirectory).filter(f => f.endsWith('.md')); } catch(e) {}
   if (!fileNames) return [];
 
+  // 解码当前 slug 用于比较
+  const decodedCurrentSlug = decodeURIComponent(currentSlug);
+
   return fileNames.map(f => {
     const s = f.replace(/\.md$/, '');
     const c = fs.readFileSync(path.join(chattersDirectory, f), 'utf8');
     const { data } = matter(c);
-    return { slug: s, title: data.title || '碎片记录', date: data.date || '1970-01-01' };
-  }).filter(p => p.slug !== currentSlug)
+    return {
+      slug: encodeURIComponent(s), // 返回编码后的 slug
+      title: data.title || '碎片记录',
+      date: data.date || '1970-01-01'
+    };
+  }).filter(p => decodeURIComponent(p.slug) !== decodedCurrentSlug)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 3);
 }
