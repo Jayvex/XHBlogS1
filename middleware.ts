@@ -1,9 +1,9 @@
+import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
 
-export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+export default auth((req) => {
+  const { pathname } = req.nextUrl;
+  const isLoggedIn = !!req.auth;
 
   // 需要保护的路由
   const protectedRoutes = ["/publish"];
@@ -15,18 +15,12 @@ export async function middleware(request: NextRequest) {
   );
 
   const isProtectedApiRoute = protectedApiRoutes.some((route) =>
-    pathname.startsWith(route)
+    pathname.startsWith(route) && req.method !== "GET"
   );
 
   // 如果是需要保护的路由，检查认证
   if (isProtectedRoute || isProtectedApiRoute) {
-    const token = await getToken({
-      req: request,
-      secret: process.env.NEXTAUTH_SECRET,
-    });
-
-    // 如果未登录，重定向到登录页面
-    if (!token) {
+    if (!isLoggedIn) {
       // 如果是 API 路由，返回 401
       if (isProtectedApiRoute) {
         return NextResponse.json(
@@ -36,13 +30,13 @@ export async function middleware(request: NextRequest) {
       }
 
       // 如果是页面路由，重定向到登录页面
-      const loginUrl = new URL("/login", request.url);
+      const loginUrl = new URL("/login", req.url);
       loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
     }
 
     // 检查是否是管理员
-    if (token.role !== "admin") {
+    if ((req.auth?.user as any)?.role !== "admin") {
       // 如果是 API 路由，返回 403
       if (isProtectedApiRoute) {
         return NextResponse.json(
@@ -52,24 +46,17 @@ export async function middleware(request: NextRequest) {
       }
 
       // 如果是页面路由，重定向到首页
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/", req.url));
     }
   }
 
   // 登录页面：如果已登录，重定向到发布页面
-  if (pathname === "/login") {
-    const token = await getToken({
-      req: request,
-      secret: process.env.NEXTAUTH_SECRET,
-    });
-
-    if (token) {
-      return NextResponse.redirect(new URL("/publish", request.url));
-    }
+  if (pathname === "/login" && isLoggedIn) {
+    return NextResponse.redirect(new URL("/publish", req.url));
   }
 
   return NextResponse.next();
-}
+});
 
 export const config = {
   matcher: [
