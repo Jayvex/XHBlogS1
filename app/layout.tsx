@@ -1,6 +1,5 @@
 import 'katex/dist/katex.min.css';
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../components/ThemeProvider";
 import BackgroundEffects from "../components/BackgroundEffects";
@@ -15,10 +14,17 @@ import DanmakuBackground from '../components/DanmakuBackground';
 
 import MobileBackButton from '../components/MobileBackButton';
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+// 使用系统字体回退（Google Fonts 在国内无法访问）
+const fontConfig = {
+  variable: "--font-geist-sans",
+  className: "",
+};
 
-// 使用本地字体或系统字体回退（Google Fonts 在国内无法访问）
+const fontMonoConfig = {
+  variable: "--font-geist-mono",
+  className: "",
+};
+
 const notoSerif = {
   variable: "--font-serif",
   className: "",
@@ -35,7 +41,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="zh-CN" className={`${geistSans.variable} ${geistMono.variable} ${notoSerif.variable} h-full antialiased`} suppressHydrationWarning>
+    <html lang="zh-CN" className={`${fontConfig.variable} ${fontMonoConfig.variable} ${notoSerif.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
         <style
           suppressHydrationWarning
