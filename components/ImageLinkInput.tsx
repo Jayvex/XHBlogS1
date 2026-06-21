@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Image, Link, X, Eye, EyeOff, GripVertical, Check, AlertCircle } from 'lucide-react';
+import { Image, Link, X, Eye, EyeOff, GripVertical, Check, AlertCircle, Upload, Clipboard } from 'lucide-react';
 
 interface ImageLinkInputProps {
   /**
@@ -33,6 +33,23 @@ interface ImageLinkInputProps {
   className?: string;
 }
 
+// PicX 图床链接格式
+const PICX_PATTERNS = [
+  /^https?:\/\/cdn\.jsdelivr\.net\/gh\/.+\/.+\.(jpg|jpeg|png|gif|webp|svg)$/i,
+  /^https?:\/\/raw\.githubusercontent\.com\/.+\/.+\.(jpg|jpeg|png|gif|webp|svg)$/i,
+  /^https?:\/\/picx\.xzlbz\.com\/.+\.(jpg|jpeg|png|gif|webp|svg)$/i,
+  /^https?:\/\/s2\.loli\.net\/.+\.(jpg|jpeg|png|gif|webp|svg)$/i,
+  /^https?:\/\/i\.imgur\.com\/.+\.(jpg|jpeg|png|gif|webp|svg)$/i,
+];
+
+// 常见图床链接格式
+const IMAGE_URL_PATTERNS = [
+  ...PICX_PATTERNS,
+  /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg)$/i,
+  /^https?:\/\/images\.unsplash\.com\/.*/i,
+  /^https?:\/\/.+\/photo-.*/i,
+];
+
 export default function ImageLinkInput({
   value = [],
   onChange,
@@ -46,20 +63,42 @@ export default function ImageLinkInput({
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [showPicXTips, setShowPicXTips] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // 检测是否为 PicX 图床链接
+  const isPicXUrl = useCallback((url: string): boolean => {
+    return PICX_PATTERNS.some(pattern => pattern.test(url));
+  }, []);
 
   // 验证图片链接是否有效
   const validateImageUrl = useCallback(async (url: string): Promise<boolean> => {
     try {
       setIsValidating(true);
-      const response = await fetch(url, { method: 'HEAD' });
-      const contentType = response.headers.get('content-type');
-      return contentType?.startsWith('image/') || false;
+
+      // 如果是 PicX 图床链接，直接通过格式验证
+      if (isPicXUrl(url)) {
+        return true;
+      }
+
+      // 其他链接尝试 HEAD 请求验证
+      const response = await fetch(url, { method: 'HEAD', mode: 'no-cors' });
+      // no-cors 模式下无法读取 contentType，所以只要请求成功就认为有效
+      return true;
     } catch {
-      return false;
+      // 如果 HEAD 请求失败，尝试通过创建 Image 对象验证
+      return new Promise((resolve) => {
+        const img = new window.Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url;
+        // 5秒超时
+        setTimeout(() => resolve(false), 5000);
+      });
     } finally {
       setIsValidating(false);
     }
-  }, []);
+  }, [isPicXUrl]);
 
   // 添加图片链接
   const handleAdd = useCallback(async () => {
@@ -89,6 +128,33 @@ export default function ImageLinkInput({
     setSuccess('图片添加成功');
     setTimeout(() => setSuccess(''), 2000);
   }, [inputUrl, value, maxImages, validateImageUrl, onChange]);
+
+  // 从剪贴板粘贴
+  const handlePaste = useCallback(async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (text && (text.startsWith('http://') || text.startsWith('https://'))) {
+        setInputUrl(text);
+        setError('');
+      } else {
+        setError('剪贴板中没有有效的图片链接');
+      }
+    } catch {
+      setError('无法读取剪贴板');
+    }
+  }, []);
+
+  // 监听粘贴事件
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'v' && document.activeElement === inputRef.current) {
+        // 让浏览器默认处理粘贴
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // 删除图片
   const handleRemove = useCallback((index: number) => {
@@ -124,23 +190,79 @@ export default function ImageLinkInput({
 
   return (
     <div className={`space-y-4 ${className}`}>
+      {/* PicX 图床提示 */}
+      <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl p-4 border border-blue-500/20">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <Upload size={16} className="text-blue-500" />
+            <span className="text-sm font-bold text-blue-600 dark:text-blue-400">PicX 图床支持</span>
+          </div>
+          <button
+            onClick={() => setShowPicXTips(!showPicXTips)}
+            className="text-xs text-blue-500 hover:text-blue-600 transition-colors"
+          >
+            {showPicXTips ? '收起' : '查看说明'}
+          </button>
+        </div>
+
+        <AnimatePresence>
+          {showPicXTips && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="text-xs text-slate-600 dark:text-slate-400 space-y-2 mt-2">
+                <p>支持 PicX 图床的所有链接格式：</p>
+                <ul className="list-disc list-inside space-y-1 ml-2">
+                  <li>jsdelivr CDN: <code className="bg-slate-200/50 dark:bg-slate-700/50 px-1 rounded">cdn.jsdelivr.net/gh/...</code></li>
+                  <li>GitHub 原始: <code className="bg-slate-200/50 dark:bg-slate-700/50 px-1 rounded">raw.githubusercontent.com/...</code></li>
+                  <li>PicX 官方: <code className="bg-slate-200/50 dark:bg-slate-700/50 px-1 rounded">picx.xzlbz.com/...</code></li>
+                </ul>
+                <p className="text-blue-500">
+                  💡 提示：在 PicX 中复制图片链接后，直接粘贴到输入框即可
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
       {/* 输入区域 */}
       <div className="flex gap-2">
         <div className="flex-1 relative">
           <Link className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
           <input
+            ref={inputRef}
             type="url"
             value={inputUrl}
             onChange={(e) => {
               setInputUrl(e.target.value);
               setError('');
             }}
-            placeholder="粘贴图片链接 (https://...)"
+            placeholder="粘贴图片链接 (支持 PicX、GitHub、SM.MS 等图床)"
             className="w-full pl-10 pr-4 py-3 bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
             onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
+            onPaste={(e) => {
+              // 自动检测粘贴的 PicX 链接
+              const text = e.clipboardData.getData('text');
+              if (isPicXUrl(text)) {
+                e.preventDefault();
+                setInputUrl(text);
+                setError('');
+              }
+            }}
             disabled={isValidating}
           />
         </div>
+        <button
+          onClick={handlePaste}
+          className="px-4 py-3 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-bold text-sm hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors"
+          title="从剪贴板粘贴"
+        >
+          <Clipboard size={16} />
+        </button>
         <button
           onClick={handleAdd}
           disabled={isValidating || !inputUrl.trim()}
@@ -211,6 +333,15 @@ export default function ImageLinkInput({
                 <GripVertical size={16} className="text-white drop-shadow-md" />
               </div>
 
+              {/* PicX 图床标识 */}
+              {isPicXUrl(url) && (
+                <div className="absolute top-2 left-8 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="px-2 py-0.5 bg-blue-500/80 text-white text-[10px] rounded-full backdrop-blur-sm">
+                    PicX
+                  </span>
+                </div>
+              )}
+
               {/* 图片 */}
               <img
                 src={url}
@@ -269,18 +400,28 @@ export default function ImageLinkInput({
                 alt="预览"
                 className="max-w-full max-h-96 mx-auto rounded-lg"
               />
-              <p className="text-center text-sm text-slate-500 mt-2">
-                图片 {previewIndex + 1} / {value.length}
-              </p>
+              <div className="flex items-center justify-center gap-4 mt-2">
+                <p className="text-sm text-slate-500">
+                  图片 {previewIndex + 1} / {value.length}
+                </p>
+                {isPicXUrl(value[previewIndex]) && (
+                  <span className="px-2 py-0.5 bg-blue-500/10 text-blue-500 text-xs rounded-full">
+                    PicX 图床
+                  </span>
+                )}
+              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* 提示信息 */}
-      <p className="text-xs text-slate-400">
-        支持常见图床链接（GitHub、SM.MS、Imgur、七牛云等），最多 {maxImages} 张图片，可拖拽排序
-      </p>
+      <div className="flex items-center justify-between text-xs text-slate-400">
+        <span>
+          支持 PicX、GitHub、SM.MS、Imgur 等图床，最多 {maxImages} 张图片
+        </span>
+        <span>可拖拽排序</span>
+      </div>
     </div>
   );
 }
