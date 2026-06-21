@@ -132,7 +132,23 @@ export const siteConfig = {
 
 ## 📝 内容管理
 
-### 添加文章
+### 使用本地发布工具（推荐）
+
+项目提供了本地发布工具，可以快速创建文章、说说、杂谈：
+
+```bash
+npm run publish
+```
+
+或者直接运行：
+
+```bash
+node scripts/local-publish.js
+```
+
+工具会引导你输入标题、内容、标签等信息，自动生成符合格式的 Markdown 文件。
+
+### 手动添加文章
 
 在 `posts/` 目录创建 `.md` 文件：
 

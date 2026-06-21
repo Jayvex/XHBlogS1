@@ -11,8 +11,6 @@ import BackgroundSlider from "../components/BackgroundSlider";
 import GlobalToolbox from "../components/GlobalToolbox";
 import SplashScreen from "../components/SplashScreen";
 import DanmakuBackground from '../components/DanmakuBackground';
-import SessionProvider from '../components/SessionProvider';
-
 import MobileBackButton from '../components/MobileBackButton';
 
 // 使用系统字体回退（Google Fonts 在国内无法访问）
@@ -103,9 +101,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               </div>
 
               <div className="relative z-10 flex-1 flex flex-col">
-                <SessionProvider>
-                  {children}
-                </SessionProvider>
+                {children}
               </div>
 
               <div className="hidden md:block">

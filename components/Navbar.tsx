@@ -4,12 +4,9 @@ import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, PanInfo } from 'framer-motion';
-import { useSession, signOut } from 'next-auth/react';
-import { LogIn, LogOut, User } from 'lucide-react';
 import { siteConfig } from '../siteConfig';
 
 export default function Navbar() {
-  const { data: session } = useSession();
   const [showNav, setShowNav] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -81,7 +78,6 @@ export default function Navbar() {
     { name: '说说', href: '/moments' },
     { name: '杂谈', href: '/chatter' },
     { name: '关于', href: '/about' },
-    { name: '发布', href: '/publish' },
   ];
 
   // 🌟 核心：过滤掉”灵境”，专供手机端使用，保证圆盘自动重新均匀排布
@@ -109,32 +105,6 @@ export default function Navbar() {
               );
             })}
 
-            {/* 登录/登出按钮 */}
-            {session?.user ? (
-              <div className="flex items-center gap-3 ml-4 pl-4 border-l border-slate-200 dark:border-slate-700">
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-indigo-500/10 rounded-full">
-                  <User size={14} className="text-indigo-500" />
-                  <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">
-                    {session.user.name}
-                  </span>
-                </div>
-                <button
-                  onClick={() => signOut({ callbackUrl: "/" })}
-                  className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
-                  title="登出"
-                >
-                  <LogOut size={16} />
-                </button>
-              </div>
-            ) : (
-              <Link
-                href="/login"
-                className="flex items-center gap-1.5 px-3 py-1.5 ml-4 pl-4 border-l border-slate-200 dark:border-slate-700 text-slate-500 hover:text-indigo-500 transition-colors"
-              >
-                <LogIn size={14} />
-                <span className="text-xs font-bold">登录</span>
-              </Link>
-            )}
           </nav>
         </div>
       </header>
