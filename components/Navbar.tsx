@@ -78,6 +78,7 @@ export default function Navbar() {
     { name: '说说', href: '/moments' },
     { name: '杂谈', href: '/chatter' },
     { name: '关于', href: '/about' },
+    { name: '发布', href: '/publish' },
   ];
 
   // 🌟 核心：过滤掉”灵境”，专供手机端使用，保证圆盘自动重新均匀排布
