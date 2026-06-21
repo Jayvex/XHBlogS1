@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { MapPin, MessageSquare, Clock, Sparkles, Search, ArrowDownAZ, ArrowUpZA, ChevronLeft, ChevronRight, Ghost } from 'lucide-react';
 import MomentComments from '../../components/MomentComments';
+import LikeButton from '../../components/LikeButton';
 
 function timeAgo(dateStr: string) {
   const date = new Date(dateStr);
@@ -124,9 +125,17 @@ export default function MomentList({ moments, authorName, avatarUrl }: any) {
             </span>
           )}
         </div>
-        <button onClick={() => setOpenCommentId(openCommentId === moment.id ? null : moment.id)} className={`w-8 h-8 md:w-10 md:h-10 flex items-center justify-center shrink-0 rounded-full transition-all shadow-sm ${openCommentId === moment.id ? 'bg-indigo-500 text-white shadow-indigo-500/30 rotate-12' : 'bg-white/80 dark:bg-slate-800 text-slate-400 hover:text-indigo-500 hover:bg-slate-100 dark:hover:bg-slate-700'}`}>
-          <MessageSquare size={14} className="md:w-4 md:h-4" />
-        </button>
+        <div className="flex items-center gap-2">
+          <LikeButton
+            id={moment.id}
+            storagePrefix="moment_liked_"
+            size="md"
+            showCount={false}
+          />
+          <button onClick={() => setOpenCommentId(openCommentId === moment.id ? null : moment.id)} className={`w-8 h-8 md:w-10 md:h-10 flex items-center justify-center shrink-0 rounded-full transition-all shadow-sm ${openCommentId === moment.id ? 'bg-indigo-500 text-white shadow-indigo-500/30 rotate-12' : 'bg-white/80 dark:bg-slate-800 text-slate-400 hover:text-indigo-500 hover:bg-slate-100 dark:hover:bg-slate-700'}`}>
+            <MessageSquare size={14} className="md:w-4 md:h-4" />
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>
