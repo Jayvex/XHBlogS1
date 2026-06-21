@@ -25,6 +25,7 @@ import SidebarLyric from '../../../components/SidebarLyric';
 import BackButton from '../../../components/BackButton';
 import Comments from '../../../components/Comments';
 import ArticleContent from '../../../components/ArticleContent';
+import ReadingProgress from '../../../components/ReadingProgress';
 
 export async function generateStaticParams() {
   const chattersDirectory = path.join(process.cwd(), 'chatters');
@@ -150,6 +151,7 @@ export default async function ChatterDetail({ params }: { params: Promise<{ slug
 
   return (
     <div className="min-h-screen relative pb-20">
+      <ReadingProgress target="#article-content" showPercentage={true} />
       <Navbar />
 
       <PageTransition>

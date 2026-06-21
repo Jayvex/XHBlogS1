@@ -26,6 +26,7 @@ import Comments from '../../../components/Comments';
 import SidebarLyric from '../../../components/SidebarLyric';
 import ArticleContent from '../../../components/ArticleContent';
 import SeriesNav from '../../../components/SeriesNav';
+import ReadingProgress from '../../../components/ReadingProgress';
 
 export async function generateStaticParams() {
   const postsDirectory = path.join(process.cwd(), 'posts');
@@ -177,6 +178,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
 
   return (
     <div className="min-h-screen relative pb-20">
+      <ReadingProgress target="#article-content" showPercentage={true} />
       <Navbar />
       <PageTransition>
         <main className="w-[95%] md:w-[90%] max-w-6xl mx-auto mt-24 md:mt-28 flex flex-col lg:flex-row gap-6 md:gap-8 relative z-10">
