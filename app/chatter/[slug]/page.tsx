@@ -24,6 +24,7 @@ import ClientSocials from '../../../components/ClientSocials';
 import SidebarLyric from '../../../components/SidebarLyric';
 import BackButton from '../../../components/BackButton';
 import Comments from '../../../components/Comments';
+import ArticleContent from '../../../components/ArticleContent';
 
 export async function generateStaticParams() {
   const chattersDirectory = path.join(process.cwd(), 'chatters');
@@ -296,9 +297,9 @@ export default async function ChatterDetail({ params }: { params: Promise<{ slug
                   }
                 `}</style>
 
-                <div
+                <ArticleContent
+                  contentHtml={chatterData.contentHtml}
                   className="prose prose-slate dark:prose-invert prose-base md:prose-lg max-w-none text-slate-800 dark:text-slate-200 font-serif transition-colors duration-700 leading-relaxed scroll-smooth"
-                  dangerouslySetInnerHTML={{ __html: chatterData.contentHtml }}
                 />
               </div>
 
