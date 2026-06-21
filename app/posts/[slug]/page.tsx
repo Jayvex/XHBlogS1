@@ -25,6 +25,7 @@ import BackButton from '../../../components/BackButton';
 import Comments from '../../../components/Comments';
 import SidebarLyric from '../../../components/SidebarLyric';
 import ArticleContent from '../../../components/ArticleContent';
+import SeriesNav from '../../../components/SeriesNav';
 
 export async function generateStaticParams() {
   const postsDirectory = path.join(process.cwd(), 'posts');
@@ -115,7 +116,8 @@ async function getPostData(slug: string) {
     title: data.title,
     date: data.date,
     tags: data.tags && Array.isArray(data.tags) ? data.tags : [],
-    cover: data.cover || siteConfig.defaultPostCover
+    cover: data.cover || siteConfig.defaultPostCover,
+    series: data.series || null,
   };
 }
 
@@ -132,10 +134,46 @@ function getRecentPosts(currentSlug: string) {
   }).filter(p => p.slug !== currentSlug).slice(0, 3);
 }
 
+function getSeriesPosts(seriesName: string, currentSlug: string) {
+  const postsDirectory = path.join(process.cwd(), 'posts');
+  let fileNames: string[] = [];
+  try { fileNames = fs.readdirSync(postsDirectory).filter(f => f.endsWith('.md')); } catch(e) {}
+  if (!fileNames) return [];
+
+  const seriesPosts = fileNames
+    .map(f => {
+      const s = f.replace(/\.md$/, '');
+      const c = fs.readFileSync(path.join(postsDirectory, f), 'utf8');
+      const { data } = matter(c);
+      return {
+        slug: s,
+        title: data.title || '无标题',
+        order: data.series?.order || 0,
+        seriesName: data.series?.name || '',
+      };
+    })
+    .filter(p => p.seriesName === seriesName)
+    .sort((a, b) => a.order - b.order);
+
+  return seriesPosts;
+}
+
 export default async function Post({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;
   const postData = await getPostData(resolvedParams.slug);
   const recentPosts = getRecentPosts(resolvedParams.slug);
+
+  // 获取系列文章信息
+  let seriesData = null;
+  if (postData.series?.name) {
+    const seriesPosts = getSeriesPosts(postData.series.name, resolvedParams.slug);
+    if (seriesPosts.length > 0) {
+      seriesData = {
+        name: postData.series.name,
+        posts: seriesPosts,
+      };
+    }
+  }
 
   return (
     <div className="min-h-screen relative pb-20">
@@ -301,6 +339,14 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
             </div>
 
             <SidebarLyric />
+
+            {/* 系列文章导航 */}
+            {seriesData && (
+              <SeriesNav
+                currentSlug={resolvedParams.slug}
+                series={seriesData}
+              />
+            )}
 
             <div className="bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl rounded-3xl p-6 border border-white/40 dark:border-white/10 shadow-xl">
               <h3 className="font-black text-slate-900 dark:text-white mb-4 border-l-4 border-indigo-500 pl-2 text-sm">RECOMMENDED</h3>

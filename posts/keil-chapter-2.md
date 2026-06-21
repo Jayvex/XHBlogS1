@@ -5,6 +5,10 @@ tags: ["单片机", "51单片机", "LED", "嵌入式", "C语言"]
 mood: "😊"
 cover: ""
 description: "记录51单片机LED控制的学习过程，包括点亮、闪烁、流水灯等基础实验"
+series:
+  name: "51单片机学习笔记"
+  order: 2
+  total: 9
 ---
 
 ## 引言
