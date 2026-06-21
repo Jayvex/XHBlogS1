@@ -27,6 +27,7 @@ import SidebarLyric from '../../../components/SidebarLyric';
 import ArticleContent from '../../../components/ArticleContent';
 import SeriesNav from '../../../components/SeriesNav';
 import ReadingProgress from '../../../components/ReadingProgress';
+import RelatedPosts from '../../../components/RelatedPosts';
 
 export async function generateStaticParams() {
   const postsDirectory = path.join(process.cwd(), 'posts');
@@ -159,10 +160,32 @@ function getSeriesPosts(seriesName: string, currentSlug: string) {
   return seriesPosts;
 }
 
+function getAllPosts() {
+  const postsDirectory = path.join(process.cwd(), 'posts');
+  let fileNames: string[] = [];
+  try { fileNames = fs.readdirSync(postsDirectory).filter(f => f.endsWith('.md')); } catch(e) {}
+  if (!fileNames) return [];
+
+  return fileNames.map(f => {
+    const s = f.replace(/\.md$/, '');
+    const c = fs.readFileSync(path.join(postsDirectory, f), 'utf8');
+    const { data } = matter(c);
+    return {
+      slug: s,
+      title: data.title || '无标题',
+      date: data.date || '1970-01-01',
+      tags: data.tags && Array.isArray(data.tags) ? data.tags : [],
+      cover: data.cover || '',
+      description: data.description || '',
+    };
+  });
+}
+
 export default async function Post({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;
   const postData = await getPostData(resolvedParams.slug);
   const recentPosts = getRecentPosts(resolvedParams.slug);
+  const allPosts = getAllPosts();
 
   // 获取系列文章信息
   let seriesData = null;
@@ -361,6 +384,14 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
                 ))}
               </div>
             </div>
+
+            {/* 相关文章推荐 */}
+            <RelatedPosts
+              currentSlug={resolvedParams.slug}
+              currentTags={postData.tags}
+              posts={allPosts}
+              limit={3}
+            />
 
             {postData.toc.length > 0 && (
               <ClientTOC toc={postData.toc} />
