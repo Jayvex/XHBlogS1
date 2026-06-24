@@ -4,7 +4,6 @@ date: "2026-06-16 12:00:00"
 tags: ["Claude-code", "DeepSeek"]
 mood: "😊"
 cover: ""
-description: "本文主要是教大家如何安装Claude-code与接入国产DeepSeek大模型。"
 ---
 
 ## Claude-code的安装
@@ -48,7 +47,7 @@ claude --version
 ## 配置环境变量
 
 ```
-{ 
+{
   "env": {
     "ANTHROPIC_BASE_URL": "https://api.deepseek.com/anthropic",
     "ANTHROPIC_AUTH_TOKEN": "<你的 DeepSeek API Key>",   //在这里填写你的DeepSeek API Key（尖括号要一起删掉）
